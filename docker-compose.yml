@@ -1,0 +1,21 @@
+services:
+  chroma-transfer:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/data
+    environment:
+      SECRET_KEY: "change-me-in-production"
+      DATABASE_URL: "sqlite:////data/chroma_transfer.db"
+      OIDC_ENABLED: "false"
+      # Uncomment to enable OIDC:
+      # OIDC_ENABLED: "true"
+      # OIDC_ISSUER: "https://accounts.google.com"
+      # OIDC_CLIENT_ID: "your-client-id"
+      # OIDC_CLIENT_SECRET: "your-client-secret"
+      # OIDC_REDIRECT_URI: "http://localhost:8000/auth/callback"
+    restart: unless-stopped
+
+volumes:
+  chroma_data:

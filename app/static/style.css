@@ -1,0 +1,150 @@
+/* =========================================================
+   Chroma Transfer – custom styles
+   ========================================================= */
+
+/* ----- Log / Terminal area ----- */
+.log-area {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace;
+  font-size: 0.8rem;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  height: 14rem;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  border: 1px solid #444;
+}
+
+.log-line {
+  line-height: 1.5;
+}
+
+/* ----- Upload / drop area ----- */
+.upload-area {
+  border: 2px dashed #495057;
+  border-radius: 0.5rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  min-height: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-area:hover {
+  border-color: #0d6efd;
+  background-color: rgba(13, 110, 253, 0.05);
+}
+
+.upload-area.drag-over {
+  border-color: #0d6efd;
+  background-color: rgba(13, 110, 253, 0.12);
+}
+
+.upload-area-content,
+.upload-area-filename {
+  width: 100%;
+}
+
+.upload-area-filename {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  color: #adb5bd;
+}
+
+/* ----- Machine list ----- */
+.machine-list {
+  min-height: 4rem;
+}
+
+.machine-list .machine-item {
+  cursor: default;
+  transition: background-color 0.15s ease;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.machine-list .machine-item:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.machine-list .machine-item.selected {
+  background-color: rgba(13, 110, 253, 0.18);
+  border-left: 3px solid #0d6efd;
+}
+
+.machine-info {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ----- Extra small button for machine list actions ----- */
+.btn-xs {
+  padding: 0.15rem 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  border-radius: 0.25rem;
+}
+
+/* ----- Progress bar ----- */
+.progress {
+  border-radius: 0.5rem;
+  background-color: #2b2b2b;
+}
+
+.progress-bar {
+  transition: width 0.3s ease;
+  border-radius: 0.5rem;
+}
+
+/* ----- Card adjustments ----- */
+.card {
+  border-color: #373b41;
+}
+
+.card-header {
+  background-color: #212529;
+  border-bottom-color: #373b41;
+}
+
+/* ----- Scrollbar styling for log area ----- */
+.log-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log-area::-webkit-scrollbar-track {
+  background: #2b2b2b;
+  border-radius: 3px;
+}
+
+.log-area::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+.log-area::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* ----- Responsive tweaks ----- */
+@media (max-width: 767.98px) {
+  .upload-area {
+    padding: 1.5rem 0.75rem;
+    min-height: 7rem;
+  }
+
+  .log-area {
+    height: 10rem;
+  }
+
+  .col-md-4,
+  .col-md-8 {
+    margin-bottom: 1rem;
+  }
+}
