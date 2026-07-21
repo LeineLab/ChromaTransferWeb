@@ -1,6 +1,6 @@
 services:
   chroma-transfer:
-    build: .
+    image: ghcr.io/leinelab/chromatransferweb:latest
     ports:
       - "8000:8000"
     volumes:
