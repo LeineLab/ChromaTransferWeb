@@ -38,11 +38,12 @@ STATIC_DIR = Path(__file__).parent / "static"
 class OIDCProtectionMiddleware:
     """
     When OIDC is enabled, enforce authentication for all routes except:
-      - /auth/*          (login/callback/logout/me)
-      - /health
-      - /static/*
-      - /               (root redirect)
-    API routes (/api/*) get a 401 JSON response; others get a login redirect.
+      - /auth/*               (login/callback/logout/me)
+      - /health               (Docker healthcheck)
+      - /static/vendor/*      (third-party assets – Bootstrap etc.)
+
+    Unauthenticated requests to /api/* receive a 401 JSON response.
+    All other unauthenticated requests are redirected to /auth/login.
     """
 
     def __init__(self, app):
@@ -59,17 +60,21 @@ class OIDCProtectionMiddleware:
 
         path: str = scope.get("path", "")
 
-        # Paths that are always public
-        public_prefixes = ("/auth/", "/health", "/static/", "/")
-        is_public = path == "/" or any(
-            path.startswith(p) for p in ("/auth/", "/health", "/static/")
+        # Always public: auth flow, healthcheck, and vendored static assets.
+        # Vendored assets (Bootstrap) must be reachable before login so that
+        # any future login page can be styled. App-specific assets (app.js,
+        # style.css, index.html) are intentionally NOT public so that the
+        # browser is redirected to the OIDC provider before seeing the UI.
+        is_public = (
+            path.startswith("/auth/")
+            or path == "/health"
+            or path.startswith("/static/vendor/")
         )
         if is_public:
             await self._app(scope, receive, send)
             return
 
-        # Check session for authenticated user
-        # We need to build a Request to access the session
+        # Check session for authenticated user.
         from starlette.requests import Request as StarletteRequest
         request = StarletteRequest(scope, receive)
         user = request.session.get("user")
@@ -77,7 +82,7 @@ class OIDCProtectionMiddleware:
             await self._app(scope, receive, send)
             return
 
-        # Not authenticated – return appropriate response
+        # Not authenticated – API callers get 401, browsers get a login redirect.
         if path.startswith("/api/"):
             response = JSONResponse(
                 {"detail": "Not authenticated"}, status_code=401
