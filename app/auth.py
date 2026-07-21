@@ -41,7 +41,7 @@ async def _get_discovery() -> dict:
     issuer = cfg["issuer"]
     if not issuer:
         raise RuntimeError("OIDC_ISSUER is not configured")
-    discovery_url = f"{issuer}/.well-known/openid-configuration"
+    discovery_url = f"{issuer.rstrip('/')}/.well-known/openid-configuration"
     async with httpx.AsyncClient() as client:
         resp = await client.get(discovery_url, timeout=10)
         resp.raise_for_status()
