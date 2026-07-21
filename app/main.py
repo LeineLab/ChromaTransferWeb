@@ -26,9 +26,7 @@ from .routers.transfer import router as transfer_router
 
 app = FastAPI(title="Chroma Transfer", version="1.0.0")
 
-# Session middleware (required for OIDC, harmless without it)
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
-app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 # ---------------------------------------------------------------------------
 # OIDC protection middleware
@@ -90,7 +88,12 @@ class OIDCProtectionMiddleware:
         await response(scope, receive, send)
 
 
+# Middleware order: add_middleware() wraps from outside in, so the LAST call
+# becomes the outermost layer (runs first on every request).
+# Required execution order: SessionMiddleware → OIDCProtectionMiddleware → app
+# Therefore: OIDC must be added first (inner), Session last (outer).
 app.add_middleware(OIDCProtectionMiddleware)
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 # ---------------------------------------------------------------------------
 # Routers
